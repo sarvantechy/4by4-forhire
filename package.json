@@ -1,0 +1,50 @@
+{
+  "name": "4by4-forhire",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Customer-to-customer rental marketplace for mobile and web",
+  "packageManager": "npm@11.6.2",
+  "engines": {
+    "node": ">=22.14 <25",
+    "npm": ">=10 <12"
+  },
+  "overrides": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "backend:check": "npm run backend:lint && npm run backend:typecheck && npm run backend:test",
+    "backend:lint": ".venv/bin/ruff check backend/app backend/tests",
+    "backend:test:integration": "cd backend && TEST_DATABASE_URL=$DATABASE_URL ../.venv/bin/pytest tests/test_identity_integration.py",
+    "backend:test": "cd backend && ../.venv/bin/pytest",
+    "backend:typecheck": "cd backend && ../.venv/bin/mypy app",
+    "build": "node ./scripts/run-workspaces.mjs build",
+    "check": "npm run contracts:check && npm run backend:check && npm run lint && npm run typecheck && npm run test && npm run build",
+    "contracts:check": "node ./scripts/generate-contracts.mjs --check",
+    "contracts:generate": "node ./scripts/generate-contracts.mjs",
+    "db:current": "cd backend && ../.venv/bin/alembic current",
+    "db:downgrade": "cd backend && ../.venv/bin/alembic downgrade -1",
+    "db:history": "cd backend && ../.venv/bin/alembic history",
+    "db:upgrade": "cd backend && ../.venv/bin/alembic upgrade head",
+    "infra:config": "docker compose config --quiet",
+    "infra:down": "docker compose down --remove-orphans",
+    "infra:logs": "docker compose logs --tail=100",
+    "infra:reset": "docker compose down --volumes --remove-orphans",
+    "infra:status": "docker compose ps",
+    "infra:up": "docker compose up -d --wait postgres redis minio mailpit && docker compose run --rm minio-init",
+    "lint": "node ./scripts/run-workspaces.mjs lint",
+    "security:audit": "npm audit --audit-level=high",
+    "test": "node ./scripts/run-workspaces.mjs test",
+    "test:e2e": "npm run test:e2e --workspace web",
+    "typecheck": "node ./scripts/run-workspaces.mjs typecheck"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  }
+}
