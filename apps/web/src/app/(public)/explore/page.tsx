@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function ExplorePage() {
   return (
     <main id="main-content" className="content-section inventory-section">
-      <p className="eyebrow">Kanyakumari pilot</p>
+      <p className="eyebrow">Tamil Nadu pilot</p>
       <h1>Explore rentals</h1>
       <ExploreCatalog />
     </main>

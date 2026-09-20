@@ -303,4 +303,8 @@ Actor, operation, key, request digest, stored response reference, status, and ex
 
 ## Retention and Deletion
 
-Account deletion should deactivate access and schedule eligible personal data for deletion or anonymization. Financial, fraud, dispute, tax, and audit records may require longer retention. Legal and dispute holds override normal object deletion until released by an authorized workflow.
+Account deletion sets `users.status = 'deactivated'` and records `deactivated_at`, revokes all
+sessions, removes auth identities and addresses, anonymizes the retained profile, removes account
+and inventory media, and archives public inventory. Financial, booking, message, fraud, dispute,
+review, and audit records retain the stable user ID where required. Future retention jobs and legal
+holds govern final expiry of those retained records.

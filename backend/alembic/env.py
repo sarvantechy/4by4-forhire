@@ -7,11 +7,12 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from app.core.config import get_settings
 from app.core.database import Base
-from app.domains.catalog import models as catalog_models  # noqa: F401
 from app.domains.bookings import models as booking_models  # noqa: F401
+from app.domains.catalog import models as catalog_models  # noqa: F401
 from app.domains.fulfillment import models as fulfillment_models  # noqa: F401
 from app.domains.identity import models as identity_models  # noqa: F401
 from app.domains.messaging import models as messaging_models  # noqa: F401
+from app.domains.stores import models as stores_models  # noqa: F401
 from app.domains.trust import models as trust_models  # noqa: F401
 
 config = context.config

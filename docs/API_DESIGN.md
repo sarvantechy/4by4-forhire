@@ -66,12 +66,18 @@ Current status: all rows except password recovery are implemented. Password reco
 | POST | `/auth/logout` | Revoke the current session |
 | GET | `/auth/sessions` | List the user's active sessions |
 | DELETE | `/auth/sessions/{session_id}` | Revoke a session |
+| DELETE | `/auth/me` | Deactivate and anonymize the current account |
 | POST | `/auth/password/forgot` | Start password recovery |
 | POST | `/auth/password/reset` | Complete password recovery |
 
 Authentication responses should not reveal whether an unverified identifier belongs to an account where doing so enables enumeration.
 
 Mobile clients authenticate API calls with short-lived bearer access tokens and keep refresh credentials in platform-secure storage. The customer and admin web applications use secure, HTTP-only session cookies. Cookie-authenticated state-changing requests require an approved CSRF defense, and authentication responses must use restrictive cache headers.
+
+Account deactivation revokes every session, removes login identifiers, addresses, profile and
+inventory media, anonymizes the profile, and hides owned listings and stores. Stable user IDs and
+required booking, payment acknowledgement, message, dispute, review, and audit records are
+retained. The mutation uses the same bearer-or-cookie and CSRF boundary as other account changes.
 
 ## Profile and Verification APIs
 

@@ -4,14 +4,14 @@
 
 - Product: 4by4 For Hire
 - Baseline date: 2026-09-16
-- Plan version: 1.2
-- Documentation reconciled: 2026-09-17
+- Plan version: 1.4
+- Documentation reconciled: 2026-09-18
 - Current phase: Phase 5 fulfillment and trust implementation, alongside open Phase 0 decisions
 - Repository state: Foundation plus working identity, catalog, booking, messaging, handover, trust, and basic moderation slices
-- Application implementation: Core C2C rental journey is connected across the API, customer web, mobile, and staff report queue; media, notifications, verification, and release hardening remain incomplete
+- Application implementation: Core C2C rental journey is connected across the API, customer web, mobile, and staff report queue. Mobile includes item-vs-service creation with quantity and optional store assignment, listing photo upload, full owner editing, native Explore booking date/time and quantity controls, self-booking suppression, owner store creation/listing, profile-completeness gating, English/Tamil locale switching, MapLibre maps backed by MapTiler tiles, related items, and conversations; public storefronts, advanced store management, media hardening, push notifications, verification, and release hardening remain incomplete
 - Local verification: PostgreSQL migrations through `20260916_0005`, 10 standard backend tests plus five PostgreSQL integration tests, generated-contract drift, workspace lint/typechecks/builds, Expo Doctor 21/21, two customer Playwright smoke tests, and responsive customer/admin browser checks verified on 2026-09-16
 - Staging deployment: Not available
-- Production deployment: Not available
+- Production deployment: Backend release `20260920161841` is verified at `https://api.forhire.4by4softwares.com`; customer/mobile store release is not available
 
 This document is the source of truth for implementation status. The [MVP Roadmap](MVP_ROADMAP.md) describes product phases and outcomes; this plan breaks those phases into executable engineering work packages.
 
@@ -27,7 +27,7 @@ It does not include the capabilities marked `Deferred` at the end of this docume
 - Expected elapsed time: 25 to 32 weeks, excluding external legal, provider, app-store, and identity-verification approval delays.
 - Delivery method: thin vertical slices. Backend schema and contract land first within a slice, followed immediately by mobile and web integration rather than waiting for the entire backend.
 - Iteration length: one or two weeks, with only packages whose dependencies are satisfied admitted to an iteration.
-- Release method: local verification, then staging verification, then a controlled Kanyakumari pilot. No direct development-to-production release.
+- Release method: local verification, then staging verification, then a controlled Tamil-Nadu-wide pilot (superseding the earlier Kanyakumari-only pilot framing). No direct development-to-production release.
 
 ## Status Vocabulary
 
@@ -42,7 +42,7 @@ Use only these values for work packages and implementation claims:
 | Implemented | Code exists but focused validation has not passed |
 | Locally verified | Focused automated checks pass in the local environment |
 | Staging verified | Deployed to staging and acceptance checks pass there |
-| Pilot deployed | Released to the controlled Kanyakumari pilot |
+| Pilot deployed | Released to the controlled Tamil-Nadu-wide pilot |
 | Production deployed | Released to the approved production audience |
 | Deferred | Explicitly outside the current MVP |
 
@@ -58,13 +58,14 @@ Do not use `implemented`, `verified`, or `deployed` interchangeably. A feature c
 | API contract | Locally verified | FastAPI OpenAPI export and shared TypeScript client compile deterministically |
 | Security and trust design | In progress | Participant ownership, CSRF, staff denial, reviews, reports, disputes, and moderation audit are implemented; provider and operating policies remain open |
 | Repository workspace | Locally verified | Root npm orchestration, version pins, environment template, and Git repository exist |
-| Mobile application | Implemented | Identity, catalog, quote/request, booking actions, messaging, handover, return, review, and report screens typecheck; device journeys pending |
+| Mobile application | Implemented | Identity, catalog, booking, messaging, fulfillment, trust, and moderation journeys compile. Owner store creation/listing and listing store assignment are implemented; listing creation accepts quantity; Explore uses native booking date/time and quantity controls and suppresses self-booking; owner listing editing covers category, content, condition/skill, quantity, pricing/deposit, fulfillment, locality/map, store assignment, and photos. All native map surfaces use MapLibre with MapTiler styles and visible attribution; device rendering with a configured production-restricted key remains pending. Public storefronts, advanced store management, device journeys, push notifications, verification, and release hardening remain pending. |
 | Customer web application | Implemented | Identity, catalog, quote/request, booking actions, messaging, handover, return, review, dispute, and report workflows typecheck; updated browser journeys pending |
-| Admin web application | Implemented | Staff sign-in, live report queue, listing decisions, and API-enforced denial are connected; updated browser journey pending |
-| Backend application | Locally verified | Ten standard tests and five PostgreSQL integration tests cover system, identity, catalog, booking, messaging, fulfillment, trust, and moderation behavior |
+| Admin web application | Implemented | Staff sign-in, live report queue, listing decisions, API-enforced denial, and a live disputes queue with per-case priority, status, and assign-to-me controls (mirrored for reports) are connected; updated browser journey pending |
+| Backend application | Production deployed | Release `20260920161841` is healthy on the isolated For Hire EC2 service. Account deactivation/anonymization, session revocation, inventory hiding, and public privacy/deletion pages are deployed; production OTP/email remains deferred for the demo boundary. |
 | Local infrastructure | Locally verified | PostGIS, Redis, MinIO, and Mailpit run healthy on dedicated local ports |
 | Automated tests | Locally verified | 10 standard backend tests, five PostgreSQL integration tests, and two customer Playwright smoke tests pass; authenticated browser journeys, physical-device coverage, load proof, and remote CI evidence remain pending |
-| Deployment | Planned | No deployment configuration or environment exists |
+| Deployment | In progress | The dedicated backend service, PostGIS container, private media bucket, HTTPS API, migrations, backups, and legal pages are production deployed; mobile Play release and customer/admin web deployment remain pending. |
+| Store listing readiness | Planned | Checklist and required asset specs captured in `STORE_LISTING.md`; no screenshots, icons, or store copy produced yet |
 
 ## Implementation Principles
 
@@ -77,7 +78,7 @@ Do not use `implemented`, `verified`, or `deployed` interchangeably. A feature c
 7. Make retry-sensitive commands idempotent and external effects outbox-driven.
 8. Add focused tests with each work package and update status only after those checks run.
 9. Keep deployment claims separate from repository implementation claims.
-10. Do not implement deferred stores, online payments, commissions, or platform delivery inside MVP abstractions.
+10. Keep approved owner-operated stores separate from deferred staff, branch, online-payment, commission, and platform-delivery capabilities.
 
 ## Proposed Repository Structure
 
@@ -115,7 +116,7 @@ Goal: remove policy and provider ambiguity that would otherwise cause implementa
 | P0-01 | Approve booking expiry and cancellation rules | Planned | Product owner | BKG-01, BKG-02, BKG-04 | Versioned policy with examples and edge cases |
 | P0-02 | Approve overdue, damage, deposit, and offline repayment rules | Planned | Product owner and legal review | FUL-01 through TRU-01 | Versioned policy and support decision tree |
 | P0-03 | Approve prohibited and restricted item policy | Planned | Legal and operations | CAT-01, CAT-02, CAT-10 | Category enforcement matrix |
-| P0-04 | Select OTP, email, maps, storage, scanning, push, and identity providers | Planned | Cost, privacy, and compliance review | ID-02, ID-03, CAT-03, CAT-05, BKG-06, TRU-02A | Decision records for each provider, local fake adapters, and fallback plan |
+| P0-04 | Select OTP, email, maps, storage, scanning, push, and identity providers | In progress | Cost, privacy, and compliance review | ID-02, ID-03, CAT-03, CAT-05, BKG-06, TRU-02A | MapLibre plus MapTiler is implemented for native maps; production key restrictions, quota review, and the remaining provider decisions are pending |
 | P0-05 | Define Tamil and English content workflow | Planned | Product owner | FND-08C, REL-01 | Translation ownership and review process |
 | P0-06 | Produce critical mobile and web wireframes | Planned | Product requirements | Feature UI packages | Approved renter, owner, handover, and dispute flows |
 | P0-07 | Define pilot support and moderation operation | Planned | Operations owner | TRU-03A through TRU-03D, REL-10 | Queue ownership, hours, escalation, and response targets |
@@ -149,7 +150,7 @@ Goal: establish a deployable, testable skeleton without implementing marketplace
 | FND-08C | Add shared validation, design tokens, and English/Tamil i18n foundation | Implemented | FND-05, FND-06, FND-07, P0-05 | All clients render shared tokens and switch locale in a smoke test |
 | FND-09 | Establish CI quality gates | Implemented | FND-03 through FND-08C | GitHub Actions definition covers infrastructure, migrations, backend/integration tests, contracts, client checks/builds, audits, Playwright, and secret scan; remote run evidence remains pending |
 | FND-10 | Add observability and secret-handling baseline | Locally verified | FND-03 | Request IDs propagate; sensitive-value redaction tests pass; health and error metrics emit |
-| FND-11 | Add deterministic factories and local demo data command | Planned | FND-04, ID-01 | Repeatable synthetic seed contains no real personal data and is safe to rerun |
+| FND-11 | Add deterministic factories and local demo data command | Implemented | FND-04, ID-01 | `backend/scripts/seed_demo_data.py` seeds a fixed demo login plus sample bookings and now a small set of listings owned by the demo login itself, idempotently; not yet run against a live database or wired to an npm script, so rerun-safety and no-real-data evidence remain unverified |
 
 #### First Implementation Slice
 
@@ -210,7 +211,7 @@ Goal: one account works securely across mobile and customer web.
 | ID-03 | Implement mobile OTP registration and login | In progress | ID-01, P0-04 | Local OTP and normalized login work; production provider and full abuse controls remain |
 | ID-04 | Implement mobile bearer and rotating refresh sessions | Locally verified | ID-01 | Secure storage, refresh rotation, and replay denial are implemented and tested |
 | ID-05 | Implement customer web cookie sessions and CSRF protection | Locally verified | ID-01 | Cookie authentication, CSRF denial, and logout are tested |
-| ID-06 | Build profile, address, session, and account screens on mobile | In progress | ID-02 through ID-04 | Authentication works; full profile, address, and session management UI remains |
+| ID-06 | Build profile, address, session, and account screens on mobile | In progress | ID-02 through ID-04 | Authentication, a demo-login shortcut, an edit-profile screen (display name/home locality/one address), and profile-completeness gating on listing creation work; avatar upload, multi-address management, `address_line_2`/`preferred_language` fields, and session/device management UI remain |
 | ID-07 | Build equivalent customer web account workflows | In progress | ID-02, ID-03, ID-05 | Account and session UI works; address editing and updated browser evidence remain |
 | ID-08 | Add admin authentication and permission baseline | Locally verified | ID-01, FND-07 | Staff-only API denial is tested and the admin sign-in boundary builds |
 | ID-09 | Implement account export, deactivation, and deletion workflow | Planned | ID-01, P0-08 | Active-booking denial, anonymization, retention, and audit tests pass |
@@ -227,7 +228,7 @@ Goal: a user can publish and discover one or many safe listings on mobile and we
 | CAT-04 | Implement availability rules and owner blocks | Planned | CAT-02 | Timezone, overlap, and quantity tests pass |
 | CAT-05 | Implement PostGIS and text search | In progress | CAT-02, CAT-04 | Text and distance search work; full privacy/filter/pagination matrix remains |
 | CAT-06 | Implement optional seller header | Implemented | ID-01, CAT-02 | Header is account-owned and cannot delegate listing ownership |
-| CAT-07 | Build mobile list, owner workspace, search, and detail flows | In progress | CAT-02 through CAT-06 | Search, create, publish, and booking entry work; media/detail device journeys remain |
+| CAT-07 | Build mobile list, owner workspace, search, and detail flows | In progress | CAT-02 through CAT-06 | Search, create, publish, item/service quantity, multi-photo upload, full owner editing, store assignment, and booking entry work. Explore has native date/time and quantity booking controls and hides booking for the owner. Store creation/listing is available from Account; device journeys and the complete public storefront remain. |
 | CAT-08 | Build responsive web listing and discovery flows | In progress | CAT-02 through CAT-06 | Search, create, publish, and booking entry work; media/detail browser journeys remain |
 | CAT-09 | Add canonical public web metadata and sitemap | Planned | CAT-08 | SEO metadata and private-indexing tests pass |
 | CAT-10 | Add moderation and report APIs | In progress | CAT-02, P0-03 | Report, approve/remove, staff denial, and reason-coded audit work; appeal and policy matrix remain |
@@ -246,7 +247,7 @@ Goal: renters and owners can safely agree on a conflict-free rental.
 | BKG-05 | Implement booking-scoped conversations | Locally verified | BKG-02 | Participant-scoped messages and retry idempotency pass PostgreSQL integration |
 | BKG-05A | Implement contact and external-payment detail protection | In progress | BKG-05 | Direct phone sharing is blocked before storage; broader obfuscation fixtures remain |
 | BKG-06 | Implement in-app, email, and push notification orchestration | Planned | BKG-04, P0-04 | Deduplication and preference tests pass |
-| BKG-07 | Build mobile booking, timeline, inbox, and owner actions | Implemented | BKG-02 through BKG-06 | Connected workflow typechecks; Android/iOS journey evidence remains |
+| BKG-07 | Build mobile booking, timeline, inbox, and owner actions | Implemented | BKG-02 through BKG-06 | Connected workflow (accept/reject/cancel, messaging, handover/return codes, condition checklist, offline payment ack, review, report) typechecks; a dedicated conversations/notifications inbox screen lists conversations and opens the matching listing chat thread; a dedicated dispute-filing UI (distinct from the generic report action) and Android/iOS journey evidence remain |
 | BKG-08 | Build equivalent customer web booking workflows | Implemented | BKG-02 through BKG-06 | Connected responsive workflow typechecks; updated browser journey evidence remains |
 
 ### Phase 5: Handover, Return, and Trust
@@ -268,7 +269,7 @@ Goal: complete a rental with private evidence and explicit offline-payment limit
 | TRU-03B | Build admin case queue and evidence-review UI | In progress | TRU-03A, FND-07 | Live report triage and listing decisions build; evidence and browser journeys remain |
 | TRU-03C | Implement admin permission matrix and sensitive-access audit | In progress | ID-08, TRU-03A | Staff denial and moderation mutation audit pass; role matrix and sensitive-read audit remain |
 | TRU-03D | Implement sanctions, appeals, and restoration workflows | Planned | CAT-10, TRU-03A | Restrict, suspend, appeal, restore, and denied-override scenarios pass |
-| FUL-06 | Build complete mobile handover and return journeys | In progress | FUL-01 through FUL-05 | Code, condition, payment, return, inspection, and review controls exist; camera/device journeys remain |
+| FUL-06 | Build complete mobile handover and return journeys | In progress | FUL-01 through FUL-05 | Code, condition (text checklist), payment, return, inspection, and review controls exist; condition-report photo evidence and camera/device journeys remain |
 | FUL-07 | Build complete responsive web handover and return journeys | In progress | FUL-01 through FUL-05 | Code, payment, return, inspection, review, and dispute controls exist; evidence/browser journeys remain |
 
 ### Phase 6: Pilot Hardening and Release
@@ -286,7 +287,7 @@ Goal: prove operational, security, recovery, and cross-platform readiness before
 | REL-07 | Prove backup restoration and incident procedures | Planned | Staging environment | Recovery evidence retained |
 | REL-08 | Complete load and booking-race testing | Planned | Staging environment, P0-09 | Read API p95 under 500 ms, booking command p95 under 1 s under approved pilot load, and allocation race invariant holds |
 | REL-09 | Prepare mobile store and customer web releases | Planned | REL-01 through REL-08 | Release candidates approved |
-| REL-10 | Launch controlled Kanyakumari pilot | Planned | REL-09, P0-07 | Pilot verification and monitoring report |
+| REL-10 | Launch controlled Tamil-Nadu-wide pilot | Planned | REL-09, P0-07 | Pilot verification and monitoring report |
 
 ## Cross-Platform Acceptance Matrix
 
@@ -398,7 +399,7 @@ When a decision blocks a package, mark it `Blocked`, name the decision ID, and c
 
 ## Deferred Capabilities
 
-- Storefronts, store-owned inventory, staff, branches, and delegated access
+- Store staff, branches, delegated access, and inventory owned independently of a user
 - Online payments, refunds, settlements, payouts, commission, and financial ledger
 - Platform-operated delivery and driver accounts
 - Vehicle rentals

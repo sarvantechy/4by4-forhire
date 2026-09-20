@@ -5,7 +5,7 @@
 - Product: 4by4 For Hire
 - Stage: Approved MVP planning baseline
 - Market: India
-- Operational pilot: Kanyakumari district, Tamil Nadu
+- Operational pilot: Tamil Nadu, statewide (superseding the earlier Kanyakumari-district-only framing)
 - Implementation status: Foundation and core identity/catalog/booking slices are implemented locally; fulfillment/trust slices are partially implemented; pilot-readiness work remains incomplete
 - Status source: [Implementation Plan](IMPLEMENTATION_PLAN.md)
 
@@ -20,12 +20,12 @@ The phrase "rent anything" describes broad utility, not unrestricted inventory. 
 ## Product Goals
 
 1. Make nearby rental inventory easy to discover and compare.
-2. Let any user publish one or many items without creating a store.
-3. Give frequent and business sellers a clear profile header without introducing storefront ownership or staff roles.
+2. Let any user publish one or many personal items without requiring a store.
+3. Let frequent and business sellers create owner-operated stores that group their listings without introducing staff roles, branches, or separate inventory ownership.
 4. Prevent overlapping confirmed bookings for the same inventory.
 5. Protect phone numbers, exact addresses, identity documents, and payment details.
 6. Create reliable evidence for pickup, delivery, condition, return, and disputes.
-7. Validate the Kanyakumari operating model before expanding operations across India.
+7. Validate the Tamil-Nadu-wide operating model before expanding operations across India.
 8. Let customers complete the same core marketplace journey on Android, iOS, or the responsive web application.
 
 ## Supported Platforms
@@ -54,7 +54,7 @@ Core marketplace rules and capabilities must remain consistent across mobile and
 - A platform-operated delivery fleet
 - Live driver tracking or route optimization
 - Vehicle rentals
-- Storefronts, store-owned inventory, staff roles, and branches
+- Store staff roles, branches, delegated access, and inventory owned independently of a user
 - Online payment processing, settlements, and owner payouts
 - Platform commission collection
 - Subscription plans or promoted listings
@@ -196,14 +196,14 @@ Exceptional states include `rejected`, `expired`, `cancelled`, `overdue`, and `d
 - Expired requests must release temporary holds automatically.
 - Rental periods and buffers use timezone-aware timestamps.
 
-### Seller Profile Header
+### Stores and Seller Presentation
 
-- A user with multiple listings can optionally configure a public seller display name, short description, cover image, locality, and operating hours.
-- The header groups the same user's active listings and does not create a separate legal owner, staff account, branch, inventory pool, or permission scope.
+- A user may create owner-operated stores with a public display name, short description, locality, and operating hours.
+- A listing may remain personal or be assigned to one active store owned by the same user.
+- A store groups the same user's listings and does not create a separate legal owner, staff account, branch, inventory pool, or permission scope.
 - The user's private name, phone number, email address, and precise address remain hidden.
-- Seller display names do not need to be globally unique; stable user identifiers prevent mistaken ownership.
-- New or edited seller headers receive automated impersonation and content checks and can be held or removed through moderation.
-- Complete store functionality is a later product phase and must use explicit migration rules if introduced.
+- Store display names do not need to be globally unique; stable slugs and owner identifiers prevent mistaken ownership.
+- New or edited stores remain subject to moderation and can be held or removed.
 
 ### Communication and Privacy
 

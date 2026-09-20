@@ -129,8 +129,70 @@
         "title": "AddressResponse",
         "type": "object"
       },
-      "AdminReportResponse": {
+      "AdminCaseUpdateRequest": {
         "properties": {
+          "assign_to_self": {
+            "default": false,
+            "title": "Assign To Self",
+            "type": "boolean"
+          },
+          "priority": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "normal",
+                  "high",
+                  "urgent"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "open",
+                  "in_review",
+                  "resolved",
+                  "dismissed"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "title": "AdminCaseUpdateRequest",
+        "type": "object"
+      },
+      "AdminDisputeResponse": {
+        "properties": {
+          "assigned_staff_user_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned Staff User Id"
+          },
+          "booking_id": {
+            "format": "uuid",
+            "title": "Booking Id",
+            "type": "string"
+          },
           "created_at": {
             "format": "date-time",
             "title": "Created At",
@@ -143,6 +205,70 @@
           "id": {
             "format": "uuid",
             "title": "Id",
+            "type": "string"
+          },
+          "opened_by_user_id": {
+            "format": "uuid",
+            "title": "Opened By User Id",
+            "type": "string"
+          },
+          "priority": {
+            "title": "Priority",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "booking_id",
+          "opened_by_user_id",
+          "type",
+          "description",
+          "status",
+          "priority",
+          "assigned_staff_user_id",
+          "created_at"
+        ],
+        "title": "AdminDisputeResponse",
+        "type": "object"
+      },
+      "AdminReportResponse": {
+        "properties": {
+          "assigned_staff_user_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned Staff User Id"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "priority": {
+            "title": "Priority",
             "type": "string"
           },
           "reason": {
@@ -170,6 +296,8 @@
           "reason",
           "description",
           "status",
+          "priority",
+          "assigned_staff_user_id",
           "created_at"
         ],
         "title": "AdminReportResponse",
@@ -208,6 +336,101 @@
         "title": "AvailabilityBlockRequest",
         "type": "object"
       },
+      "BlockUserRequest": {
+        "properties": {
+          "blocked_user_id": {
+            "format": "uuid",
+            "title": "Blocked User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "blocked_user_id"
+        ],
+        "title": "BlockUserRequest",
+        "type": "object"
+      },
+      "BlockedUserResponse": {
+        "properties": {
+          "blocked_at": {
+            "format": "date-time",
+            "title": "Blocked At",
+            "type": "string"
+          },
+          "blocked_user_id": {
+            "format": "uuid",
+            "title": "Blocked User Id",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "blocked_user_id",
+          "display_name",
+          "blocked_at"
+        ],
+        "title": "BlockedUserResponse",
+        "type": "object"
+      },
+      "Body_upload_avatar_api_v1_auth_me_avatar_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_avatar_api_v1_auth_me_avatar_post",
+        "type": "object"
+      },
+      "Body_upload_listing_image_api_v1_listings__listing_id__images_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_listing_image_api_v1_listings__listing_id__images_post",
+        "type": "object"
+      },
+      "Body_upload_my_store_cover_api_v1_me_stores__store_id__cover_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_my_store_cover_api_v1_me_stores__store_id__cover_post",
+        "type": "object"
+      },
+      "Body_upload_my_store_logo_api_v1_me_stores__store_id__logo_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_my_store_logo_api_v1_me_stores__store_id__logo_post",
+        "type": "object"
+      },
       "BookingCreateRequest": {
         "properties": {
           "fulfillment_method": {
@@ -217,6 +440,18 @@
             ],
             "title": "Fulfillment Method",
             "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
           },
           "quote_id": {
             "format": "uuid",
@@ -264,6 +499,39 @@
             "format": "uuid",
             "title": "Listing Id",
             "type": "string"
+          },
+          "listing_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Image Url"
+          },
+          "listing_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Title"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
           },
           "owner_user_id": {
             "format": "uuid",
@@ -399,6 +667,79 @@
         "title": "ConditionReportRequest",
         "type": "object"
       },
+      "ConversationSummaryResponse": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "last_message_at": {
+            "format": "date-time",
+            "title": "Last Message At",
+            "type": "string"
+          },
+          "last_message_body": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Message Body"
+          },
+          "last_message_is_mine": {
+            "title": "Last Message Is Mine",
+            "type": "boolean"
+          },
+          "listing_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Id"
+          },
+          "listing_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Title"
+          },
+          "other_display_name": {
+            "title": "Other Display Name",
+            "type": "string"
+          },
+          "other_user_id": {
+            "format": "uuid",
+            "title": "Other User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "listing_id",
+          "listing_title",
+          "other_user_id",
+          "other_display_name",
+          "last_message_body",
+          "last_message_at",
+          "last_message_is_mine"
+        ],
+        "title": "ConversationSummaryResponse",
+        "type": "object"
+      },
       "DisputeRequest": {
         "properties": {
           "description": {
@@ -428,6 +769,56 @@
           "description"
         ],
         "title": "DisputeRequest",
+        "type": "object"
+      },
+      "EmailDirectRegisterRequest": {
+        "description": "Create or sign in to an account without an OTP round trip (dev only).",
+        "properties": {
+          "client_type": {
+            "default": "mobile",
+            "enum": [
+              "mobile",
+              "customer_web"
+            ],
+            "title": "Client Type",
+            "type": "string"
+          },
+          "device_label": {
+            "anyOf": [
+              {
+                "maxLength": 160,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Label"
+          },
+          "display_name": {
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 10,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "display_name"
+        ],
+        "title": "EmailDirectRegisterRequest",
         "type": "object"
       },
       "EmailLoginRequest": {
@@ -671,14 +1062,21 @@
             "type": "string"
           },
           "condition": {
-            "enum": [
-              "new",
-              "like_new",
-              "good",
-              "fair"
+            "anyOf": [
+              {
+                "enum": [
+                  "new",
+                  "like_new",
+                  "good",
+                  "fair"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
-            "title": "Condition",
-            "type": "string"
+            "title": "Condition"
           },
           "delivery_enabled": {
             "default": false,
@@ -703,6 +1101,15 @@
               }
             ],
             "title": "Latitude"
+          },
+          "listing_type": {
+            "default": "item",
+            "enum": [
+              "item",
+              "service"
+            ],
+            "title": "Listing Type",
+            "type": "string"
           },
           "longitude": {
             "anyOf": [
@@ -744,6 +1151,18 @@
             "title": "Quantity",
             "type": "integer"
           },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          },
           "title": {
             "maxLength": 160,
             "minLength": 3,
@@ -755,11 +1174,34 @@
           "category_id",
           "title",
           "description",
-          "condition",
           "public_locality",
           "prices"
         ],
         "title": "ListingCreateRequest",
+        "type": "object"
+      },
+      "ListingImageResponse": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "position"
+        ],
+        "title": "ListingImageResponse",
         "type": "object"
       },
       "ListingResponse": {
@@ -794,6 +1236,39 @@
             "title": "Id",
             "type": "string"
           },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ListingImageResponse"
+            },
+            "title": "Images",
+            "type": "array"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "listing_type": {
+            "title": "Listing Type",
+            "type": "string"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
           "owner_user_id": {
             "format": "uuid",
             "title": "Owner User Id",
@@ -822,6 +1297,16 @@
             "title": "Status",
             "type": "string"
           },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreSummaryResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "title": {
             "title": "Title",
             "type": "string"
@@ -835,6 +1320,7 @@
           "id",
           "owner_user_id",
           "category",
+          "listing_type",
           "title",
           "description",
           "condition",
@@ -846,13 +1332,64 @@
           "public_locality",
           "version",
           "prices",
+          "images",
           "created_at"
         ],
         "title": "ListingResponse",
         "type": "object"
       },
+      "ListingStoreAssignmentRequest": {
+        "properties": {
+          "listing_version": {
+            "exclusiveMinimum": 0.0,
+            "title": "Listing Version",
+            "type": "integer"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          }
+        },
+        "required": [
+          "listing_version"
+        ],
+        "title": "ListingStoreAssignmentRequest",
+        "type": "object"
+      },
       "ListingUpdateRequest": {
         "properties": {
+          "attributes": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attributes"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
           "condition": {
             "anyOf": [
               {
@@ -894,6 +1431,32 @@
             ],
             "title": "Description"
           },
+          "latitude": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
           "pickup_enabled": {
             "anyOf": [
               {
@@ -904,6 +1467,22 @@
               }
             ],
             "title": "Pickup Enabled"
+          },
+          "prices": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PriceInput"
+                },
+                "maxItems": 4,
+                "minItems": 1,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prices"
           },
           "public_locality": {
             "anyOf": [
@@ -1008,6 +1587,54 @@
         "title": "MessageResponse",
         "type": "object"
       },
+      "MobileDirectRegisterRequest": {
+        "description": "Create or sign in to an account without an OTP round trip (dev only).",
+        "properties": {
+          "client_type": {
+            "default": "mobile",
+            "enum": [
+              "mobile",
+              "customer_web"
+            ],
+            "title": "Client Type",
+            "type": "string"
+          },
+          "device_label": {
+            "anyOf": [
+              {
+                "maxLength": 160,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Label"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "mobile_number": {
+            "title": "Mobile Number",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mobile_number"
+        ],
+        "title": "MobileDirectRegisterRequest",
+        "type": "object"
+      },
       "MobileOTPRequest": {
         "properties": {
           "mobile_number": {
@@ -1097,6 +1724,208 @@
           "reason"
         ],
         "title": "ModerationRequest",
+        "type": "object"
+      },
+      "OfferCounterRequest": {
+        "properties": {
+          "counter_amount_minor": {
+            "exclusiveMinimum": 0.0,
+            "title": "Counter Amount Minor",
+            "type": "integer"
+          },
+          "counter_reason": {
+            "default": "",
+            "maxLength": 1000,
+            "title": "Counter Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "counter_amount_minor"
+        ],
+        "title": "OfferCounterRequest",
+        "type": "object"
+      },
+      "OfferCreateRequest": {
+        "properties": {
+          "ends_at": {
+            "format": "date-time",
+            "title": "Ends At",
+            "type": "string"
+          },
+          "fulfillment_method": {
+            "enum": [
+              "pickup",
+              "owner_delivery"
+            ],
+            "title": "Fulfillment Method",
+            "type": "string"
+          },
+          "proposed_amount_minor": {
+            "exclusiveMinimum": 0.0,
+            "title": "Proposed Amount Minor",
+            "type": "integer"
+          },
+          "quantity": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 100.0,
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "reason": {
+            "maxLength": 1000,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          },
+          "unit": {
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month"
+            ],
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "starts_at",
+          "ends_at",
+          "quantity",
+          "unit",
+          "fulfillment_method",
+          "proposed_amount_minor",
+          "reason"
+        ],
+        "title": "OfferCreateRequest",
+        "type": "object"
+      },
+      "OfferResponse": {
+        "properties": {
+          "booking_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Booking Id"
+          },
+          "counter_amount_minor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counter Amount Minor"
+          },
+          "counter_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counter Reason"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "ends_at": {
+            "format": "date-time",
+            "title": "Ends At",
+            "type": "string"
+          },
+          "fulfillment_method": {
+            "title": "Fulfillment Method",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "listing_id": {
+            "format": "uuid",
+            "title": "Listing Id",
+            "type": "string"
+          },
+          "owner_user_id": {
+            "format": "uuid",
+            "title": "Owner User Id",
+            "type": "string"
+          },
+          "proposed_amount_minor": {
+            "title": "Proposed Amount Minor",
+            "type": "integer"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "renter_user_id": {
+            "format": "uuid",
+            "title": "Renter User Id",
+            "type": "string"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "listing_id",
+          "renter_user_id",
+          "owner_user_id",
+          "starts_at",
+          "ends_at",
+          "quantity",
+          "unit",
+          "fulfillment_method",
+          "proposed_amount_minor",
+          "currency",
+          "reason",
+          "status",
+          "counter_amount_minor",
+          "counter_reason",
+          "booking_id",
+          "created_at"
+        ],
+        "title": "OfferResponse",
         "type": "object"
       },
       "PaymentAcknowledgementRequest": {
@@ -1616,7 +2445,325 @@
         "title": "SessionTokensResponse",
         "type": "object"
       },
-      "UserResponse": {
+      "StoreCreateRequest": {
+        "properties": {
+          "description": {
+            "default": "",
+            "maxLength": 1200,
+            "title": "Description",
+            "type": "string"
+          },
+          "display_name": {
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "operating_hours": {
+            "$ref": "#/components/schemas/StoreHoursInput"
+          },
+          "public_locality": {
+            "maxLength": 160,
+            "minLength": 2,
+            "title": "Public Locality",
+            "type": "string"
+          }
+        },
+        "required": [
+          "display_name",
+          "public_locality"
+        ],
+        "title": "StoreCreateRequest",
+        "type": "object"
+      },
+      "StoreHoursInput": {
+        "properties": {
+          "friday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "monday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "saturday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sunday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "thursday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tuesday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "wednesday": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInterval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "StoreHoursInput",
+        "type": "object"
+      },
+      "StoreHoursInterval": {
+        "properties": {
+          "closes_at": {
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+            "title": "Closes At",
+            "type": "string"
+          },
+          "opens_at": {
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+            "title": "Opens At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opens_at",
+          "closes_at"
+        ],
+        "title": "StoreHoursInterval",
+        "type": "object"
+      },
+      "StoreListingCountsResponse": {
+        "properties": {
+          "active": {
+            "default": 0,
+            "title": "Active",
+            "type": "integer"
+          },
+          "archived": {
+            "default": 0,
+            "title": "Archived",
+            "type": "integer"
+          },
+          "draft": {
+            "default": 0,
+            "title": "Draft",
+            "type": "integer"
+          },
+          "paused": {
+            "default": 0,
+            "title": "Paused",
+            "type": "integer"
+          },
+          "total": {
+            "default": 0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "title": "StoreListingCountsResponse",
+        "type": "object"
+      },
+      "StoreOwnerResponse": {
+        "properties": {
+          "cover_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Url"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "listing_counts": {
+            "$ref": "#/components/schemas/StoreListingCountsResponse"
+          },
+          "logo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "moderation_status": {
+            "title": "Moderation Status",
+            "type": "string"
+          },
+          "operating_hours": {
+            "additionalProperties": true,
+            "title": "Operating Hours",
+            "type": "object"
+          },
+          "owner_user_id": {
+            "format": "uuid",
+            "title": "Owner User Id",
+            "type": "string"
+          },
+          "public_locality": {
+            "title": "Public Locality",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "owner_user_id",
+          "slug",
+          "display_name",
+          "description",
+          "public_locality",
+          "operating_hours",
+          "status",
+          "moderation_status",
+          "version",
+          "listing_counts",
+          "created_at"
+        ],
+        "title": "StoreOwnerResponse",
+        "type": "object"
+      },
+      "StorePublicResponse": {
+        "properties": {
+          "active_listing_count": {
+            "title": "Active Listing Count",
+            "type": "integer"
+          },
+          "cover_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Url"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "logo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "operating_hours": {
+            "additionalProperties": true,
+            "title": "Operating Hours",
+            "type": "object"
+          },
+          "public_locality": {
+            "title": "Public Locality",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "display_name",
+          "description",
+          "public_locality",
+          "operating_hours",
+          "active_listing_count"
+        ],
+        "title": "StorePublicResponse",
+        "type": "object"
+      },
+      "StoreSummaryResponse": {
         "properties": {
           "display_name": {
             "title": "Display Name",
@@ -1627,9 +2774,165 @@
             "title": "Id",
             "type": "string"
           },
+          "logo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "public_locality": {
+            "title": "Public Locality",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "display_name",
+          "public_locality"
+        ],
+        "title": "StoreSummaryResponse",
+        "type": "object"
+      },
+      "StoreUpdateRequest": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 1200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "operating_hours": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreHoursInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "public_locality": {
+            "anyOf": [
+              {
+                "maxLength": 160,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Public Locality"
+          },
+          "version": {
+            "exclusiveMinimum": 0.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "title": "StoreUpdateRequest",
+        "type": "object"
+      },
+      "UserResponse": {
+        "properties": {
+          "address_count": {
+            "default": 0,
+            "title": "Address Count",
+            "type": "integer"
+          },
+          "avatar_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar Url"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "home_locality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home Locality"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "mobile_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mobile Number"
+          },
           "preferred_language": {
             "title": "Preferred Language",
             "type": "string"
+          },
+          "profile_complete": {
+            "default": false,
+            "title": "Profile Complete",
+            "type": "boolean"
           },
           "status": {
             "title": "Status",
@@ -1776,6 +3079,96 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/admin/disputes": {
+      "get": {
+        "operationId": "admin_disputes_api_v1_admin_disputes_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminDisputeResponse"
+                  },
+                  "title": "Response Admin Disputes Api V1 Admin Disputes Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Admin Disputes",
+        "tags": [
+          "fulfillment",
+          "trust"
+        ]
+      }
+    },
+    "/api/v1/admin/disputes/{dispute_id}": {
+      "patch": {
+        "operationId": "update_dispute_case_api_v1_admin_disputes__dispute_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dispute_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Dispute Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminCaseUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDisputeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Dispute Case",
+        "tags": [
+          "fulfillment",
+          "trust"
+        ]
+      }
+    },
     "/api/v1/admin/listings/{listing_id}/moderate": {
       "post": {
         "operationId": "moderate_listing_api_v1_admin_listings__listing_id__moderate_post",
@@ -1870,6 +3263,65 @@
         ]
       }
     },
+    "/api/v1/admin/reports/{report_id}": {
+      "patch": {
+        "operationId": "update_report_case_api_v1_admin_reports__report_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Report Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminCaseUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReportResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Report Case",
+        "tags": [
+          "fulfillment",
+          "trust"
+        ]
+      }
+    },
     "/api/v1/auth/email/register": {
       "post": {
         "operationId": "register_email_api_v1_auth_email_register_post",
@@ -1906,6 +3358,48 @@
           }
         },
         "summary": "Register Email",
+        "tags": [
+          "identity"
+        ]
+      }
+    },
+    "/api/v1/auth/email/register-direct": {
+      "post": {
+        "description": "Dev-only shortcut: create or sign in to an account with no OTP step.",
+        "operationId": "register_email_direct_api_v1_auth_email_register_direct_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailDirectRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionTokensResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Register Email Direct",
         "tags": [
           "identity"
         ]
@@ -2013,6 +3507,23 @@
       }
     },
     "/api/v1/auth/me": {
+      "delete": {
+        "operationId": "deactivate_current_user_api_v1_auth_me_delete",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Deactivate Current User",
+        "tags": [
+          "identity"
+        ]
+      },
       "get": {
         "operationId": "current_user_api_v1_auth_me_get",
         "responses": {
@@ -2248,6 +3759,94 @@
           }
         ],
         "summary": "Update Address",
+        "tags": [
+          "identity"
+        ]
+      }
+    },
+    "/api/v1/auth/me/avatar": {
+      "post": {
+        "operationId": "upload_avatar_api_v1_auth_me_avatar_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_avatar_api_v1_auth_me_avatar_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload Avatar",
+        "tags": [
+          "identity"
+        ]
+      }
+    },
+    "/api/v1/auth/mobile/register-direct": {
+      "post": {
+        "description": "Dev-only shortcut: create or sign in to an account with no OTP step.",
+        "operationId": "register_mobile_direct_api_v1_auth_mobile_register_direct_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobileDirectRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionTokensResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Register Mobile Direct",
         "tags": [
           "identity"
         ]
@@ -3386,6 +4985,36 @@
         ]
       }
     },
+    "/api/v1/conversations": {
+      "get": {
+        "operationId": "list_conversations_api_v1_conversations_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ConversationSummaryResponse"
+                  },
+                  "title": "Response List Conversations Api V1 Conversations Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Conversations",
+        "tags": [
+          "messaging"
+        ]
+      }
+    },
     "/api/v1/health/live": {
       "get": {
         "description": "Report whether the API process can serve requests.",
@@ -3466,6 +5095,23 @@
                 }
               ],
               "title": "Category Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "listing_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^(item|service)$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Listing Type"
             }
           },
           {
@@ -3555,6 +5201,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "summary": "Search Listings",
         "tags": [
           "catalog"
@@ -3642,6 +5293,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "summary": "Get Listing",
         "tags": [
           "catalog"
@@ -3811,6 +5467,281 @@
         "summary": "Add Availability Block",
         "tags": [
           "catalog"
+        ]
+      }
+    },
+    "/api/v1/listings/{listing_id}/images": {
+      "post": {
+        "operationId": "upload_listing_image_api_v1_listings__listing_id__images_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_listing_image_api_v1_listings__listing_id__images_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload Listing Image",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/listings/{listing_id}/images/{image_id}": {
+      "delete": {
+        "operationId": "delete_listing_image_api_v1_listings__listing_id__images__image_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Image Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Listing Image",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/listings/{listing_id}/messages": {
+      "get": {
+        "operationId": "list_listing_messages_api_v1_listings__listing_id__messages_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MessageResponse"
+                  },
+                  "title": "Response List Listing Messages Api V1 Listings  Listing Id  Messages Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Listing Messages",
+        "tags": [
+          "catalog"
+        ]
+      },
+      "post": {
+        "operationId": "send_listing_message_api_v1_listings__listing_id__messages_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Send Listing Message",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/listings/{listing_id}/offers": {
+      "post": {
+        "operationId": "create_offer_api_v1_listings__listing_id__offers_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Offer",
+        "tags": [
+          "bookings"
         ]
       }
     },
@@ -4046,6 +5977,64 @@
         ]
       }
     },
+    "/api/v1/me/listings/{listing_id}/store": {
+      "put": {
+        "operationId": "assign_listing_store_api_v1_me_listings__listing_id__store_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingStoreAssignmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Assign Listing Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
     "/api/v1/me/seller-header": {
       "put": {
         "operationId": "upsert_seller_header_api_v1_me_seller_header_put",
@@ -4089,6 +6078,933 @@
         "summary": "Upsert Seller Header",
         "tags": [
           "catalog"
+        ]
+      }
+    },
+    "/api/v1/me/stores": {
+      "get": {
+        "operationId": "list_my_stores_api_v1_me_stores_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/StoreOwnerResponse"
+                  },
+                  "title": "Response List My Stores Api V1 Me Stores Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List My Stores",
+        "tags": [
+          "stores"
+        ]
+      },
+      "post": {
+        "operationId": "create_my_store_api_v1_me_stores_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create My Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}": {
+      "get": {
+        "operationId": "get_my_store_api_v1_me_stores__store_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get My Store",
+        "tags": [
+          "stores"
+        ]
+      },
+      "patch": {
+        "operationId": "update_my_store_api_v1_me_stores__store_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update My Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}/archive": {
+      "post": {
+        "operationId": "archive_my_store_api_v1_me_stores__store_id__archive_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Archive My Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}/cover": {
+      "delete": {
+        "operationId": "delete_my_store_cover_api_v1_me_stores__store_id__cover_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete My Store Cover",
+        "tags": [
+          "stores"
+        ]
+      },
+      "post": {
+        "operationId": "upload_my_store_cover_api_v1_me_stores__store_id__cover_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_my_store_cover_api_v1_me_stores__store_id__cover_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload My Store Cover",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}/listings": {
+      "get": {
+        "operationId": "list_my_store_listings_api_v1_me_stores__store_id__listings_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^(draft|pending_checks|under_review|active|paused|archived|removed)$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ListingResponse"
+                  },
+                  "title": "Response List My Store Listings Api V1 Me Stores  Store Id  Listings Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List My Store Listings",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}/logo": {
+      "delete": {
+        "operationId": "delete_my_store_logo_api_v1_me_stores__store_id__logo_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete My Store Logo",
+        "tags": [
+          "stores"
+        ]
+      },
+      "post": {
+        "operationId": "upload_my_store_logo_api_v1_me_stores__store_id__logo_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_my_store_logo_api_v1_me_stores__store_id__logo_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload My Store Logo",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}/pause": {
+      "post": {
+        "operationId": "pause_my_store_api_v1_me_stores__store_id__pause_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Pause My Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/me/stores/{store_id}/resume": {
+      "post": {
+        "operationId": "resume_my_store_api_v1_me_stores__store_id__resume_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOwnerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Resume My Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/offers": {
+      "get": {
+        "operationId": "list_offers_api_v1_offers_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OfferResponse"
+                  },
+                  "title": "Response List Offers Api V1 Offers Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Offers",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/offers/{offer_id}/accept": {
+      "post": {
+        "operationId": "accept_offer_api_v1_offers__offer_id__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Accept Offer",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/offers/{offer_id}/counter": {
+      "post": {
+        "operationId": "counter_offer_api_v1_offers__offer_id__counter_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferCounterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Counter Offer",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/offers/{offer_id}/counter/accept": {
+      "post": {
+        "operationId": "accept_offer_counter_api_v1_offers__offer_id__counter_accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Accept Offer Counter",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/offers/{offer_id}/counter/decline": {
+      "post": {
+        "operationId": "decline_offer_counter_api_v1_offers__offer_id__counter_decline_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Decline Offer Counter",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/offers/{offer_id}/decline": {
+      "post": {
+        "operationId": "decline_offer_api_v1_offers__offer_id__decline_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Decline Offer",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/offers/{offer_id}/withdraw": {
+      "post": {
+        "operationId": "withdraw_offer_api_v1_offers__offer_id__withdraw_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "offer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Offer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Withdraw Offer",
+        "tags": [
+          "bookings"
         ]
       }
     },
@@ -4183,6 +7099,239 @@
         "summary": "Public Seller",
         "tags": [
           "catalog"
+        ]
+      }
+    },
+    "/api/v1/stores/{slug}": {
+      "get": {
+        "operationId": "get_public_store_api_v1_stores__slug__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StorePublicResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Public Store",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/stores/{slug}/listings": {
+      "get": {
+        "operationId": "list_public_store_listings_api_v1_stores__slug__listings_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ListingResponse"
+                  },
+                  "title": "Response List Public Store Listings Api V1 Stores  Slug  Listings Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Public Store Listings",
+        "tags": [
+          "stores"
+        ]
+      }
+    },
+    "/api/v1/trust/blocks": {
+      "get": {
+        "operationId": "list_blocked_users_api_v1_trust_blocks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BlockedUserResponse"
+                  },
+                  "title": "Response List Blocked Users Api V1 Trust Blocks Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Blocked Users",
+        "tags": [
+          "fulfillment",
+          "trust"
+        ]
+      },
+      "post": {
+        "operationId": "block_user_api_v1_trust_blocks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlockUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Block User Api V1 Trust Blocks Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Block User",
+        "tags": [
+          "fulfillment",
+          "trust"
+        ]
+      }
+    },
+    "/api/v1/trust/blocks/{blocked_user_id}": {
+      "delete": {
+        "operationId": "unblock_user_api_v1_trust_blocks__blocked_user_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "blocked_user_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Blocked User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Unblock User Api V1 Trust Blocks  Blocked User Id  Delete",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Unblock User",
+        "tags": [
+          "fulfillment",
+          "trust"
         ]
       }
     },

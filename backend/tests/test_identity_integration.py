@@ -187,6 +187,103 @@ def test_mobile_otp_refresh_rotation_and_replay_denial(
     assert replay.json()["error"]["code"] == "SESSION_INVALID"
 
 
+def test_account_deactivation_removes_personal_data_and_public_inventory(
+    identity_client: tuple[TestClient, RecordingCodeSender],
+) -> None:
+    client, sender = identity_client
+    requested = client.post(
+        "/api/v1/auth/mobile/request-otp",
+        json={"mobile_number": "9876543211"},
+    )
+    verified = client.post(
+        "/api/v1/auth/mobile/verify-otp",
+        json={
+            "challenge_id": requested.json()["challenge_id"],
+            "code": sender.sent[-1].code,
+            "display_name": "Deletion Test",
+            "client_type": "mobile",
+        },
+    )
+    access_token = verified.json()["access_token"]
+    refresh_token = verified.json()["refresh_token"]
+    headers = {"Authorization": f"Bearer {access_token}"}
+    user_id = verified.json()["user"]["id"]
+
+    address = client.post(
+        "/api/v1/auth/me/addresses",
+        headers=headers,
+        json={
+            "label": "Home",
+            "address_line_1": "12 Privacy Street",
+            "locality": "Nagercoil",
+            "district": "Kanyakumari",
+            "state": "Tamil Nadu",
+            "postal_code": "629001",
+        },
+    )
+    assert address.status_code == 201
+    listing = client.post(
+        "/api/v1/listings",
+        headers=headers,
+        json={
+            "category_id": "10000000-0000-0000-0000-000000000003",
+            "title": "Deletion test listing",
+            "description": "This listing must become unavailable after deletion.",
+            "condition": "good",
+            "quantity": 1,
+            "pickup_enabled": True,
+            "delivery_enabled": False,
+            "public_locality": "Nagercoil",
+            "prices": [{"unit": "day", "amount_minor": 10000}],
+        },
+    )
+    listing_id = listing.json()["id"]
+    assert client.post(f"/api/v1/listings/{listing_id}/publish", headers=headers).status_code == 200
+
+    deleted = client.delete("/api/v1/auth/me", headers=headers)
+    assert deleted.status_code == 204
+    assert client.get("/api/v1/auth/me", headers=headers).status_code == 401
+    assert client.post(
+        "/api/v1/auth/token/refresh", json={"refresh_token": refresh_token}
+    ).status_code == 401
+    assert client.get(f"/api/v1/listings/{listing_id}").status_code == 404
+
+    assert TEST_DATABASE_URL is not None
+    engine = create_engine(TEST_DATABASE_URL)
+    with engine.connect() as connection:
+        account = connection.execute(
+            text(
+                "SELECT u.status, u.deactivated_at, p.display_name, p.home_locality "
+                "FROM users u JOIN user_profiles p ON p.user_id = u.id WHERE u.id = :user_id"
+            ),
+            {"user_id": user_id},
+        ).one()
+        assert account.status == "deactivated"
+        assert account.deactivated_at is not None
+        assert account.display_name == "Deleted user"
+        assert account.home_locality is None
+        assert connection.execute(
+            text("SELECT count(*) FROM auth_identities WHERE user_id = :user_id"),
+            {"user_id": user_id},
+        ).scalar_one() == 0
+        assert connection.execute(
+            text("SELECT count(*) FROM user_addresses WHERE user_id = :user_id"),
+            {"user_id": user_id},
+        ).scalar_one() == 0
+        listing_row = connection.execute(
+            text(
+                "SELECT status, public_locality, latitude, longitude "
+                "FROM listings WHERE id = :listing_id"
+            ),
+            {"listing_id": listing_id},
+        ).one()
+        assert listing_row.status == "archived"
+        assert listing_row.public_locality == "Unavailable"
+        assert listing_row.latitude is None
+        assert listing_row.longitude is None
+    engine.dispose()
+
+
 def test_listing_lifecycle_visibility_and_risk_review(
     identity_client: tuple[TestClient, RecordingCodeSender],
 ) -> None:
@@ -225,11 +322,92 @@ def test_listing_lifecycle_visibility_and_risk_review(
     )
     assert created.status_code == 201
     assert created.json()["status"] == "draft"
+    owner_detail = client.get(
+        f"/api/v1/listings/{created.json()['id']}", headers=headers
+    )
+    assert owner_detail.status_code == 200
+    assert owner_detail.json()["status"] == "draft"
+
+    other_requested = client.post(
+        "/api/v1/auth/mobile/request-otp",
+        json={"mobile_number": "9123456790"},
+    )
+    other_verified = client.post(
+        "/api/v1/auth/mobile/verify-otp",
+        json={
+            "challenge_id": other_requested.json()["challenge_id"],
+            "code": sender.sent[-1].code,
+            "display_name": "Other User",
+            "client_type": "mobile",
+        },
+    )
+    other_headers = {
+        "Authorization": f"Bearer {other_verified.json()['access_token']}"
+    }
+    assert (
+        client.get(
+            f"/api/v1/listings/{created.json()['id']}", headers=other_headers
+        ).status_code
+        == 404
+    )
     assert client.get(f"/api/v1/listings/{created.json()['id']}").status_code == 404
+
+    invalid_fulfillment = client.patch(
+        f"/api/v1/listings/{created.json()['id']}",
+        headers=headers,
+        json={
+            "delivery_enabled": False,
+            "pickup_enabled": False,
+            "version": created.json()["version"],
+        },
+    )
+    assert invalid_fulfillment.status_code == 422
+    assert invalid_fulfillment.json()["error"]["code"] == "LISTING_FULFILLMENT_REQUIRED"
+
+    updated = client.patch(
+        f"/api/v1/listings/{created.json()['id']}",
+        headers=headers,
+        json={
+            "condition": "like_new",
+            "delivery_enabled": True,
+            "latitude": 8.19,
+            "longitude": 77.42,
+            "prices": [
+                {
+                    "unit": "day",
+                    "amount_minor": 65000,
+                    "deposit_minor": 75000,
+                    "currency": "INR",
+                }
+            ],
+            "quantity": 2,
+            "version": created.json()["version"],
+        },
+    )
+    assert updated.status_code == 200
+    assert updated.json()["condition"] == "like_new"
+    assert updated.json()["delivery_enabled"] is True
+    assert updated.json()["latitude"] == 8.19
+    assert updated.json()["longitude"] == 77.42
+    assert updated.json()["prices"][0]["unit"] == "day"
+    assert updated.json()["prices"][0]["amount_minor"] == 65000
+    assert updated.json()["quantity"] == 2
 
     published = client.post(f"/api/v1/listings/{created.json()['id']}/publish", headers=headers)
     assert published.status_code == 200
     assert published.json()["status"] == "active"
+    self_quote = client.post(
+        f"/api/v1/listings/{created.json()['id']}/quotes",
+        headers=headers,
+        json={
+            "starts_at": "2026-10-10T04:30:00Z",
+            "ends_at": "2026-10-11T04:30:00Z",
+            "quantity": 1,
+            "unit": "day",
+        },
+    )
+    assert self_quote.status_code == 409
+    assert self_quote.json()["error"]["code"] == "SELF_BOOKING_DENIED"
     search = client.get(
         "/api/v1/listings",
         params={"q": "pressure", "latitude": 8.18, "longitude": 77.41},
@@ -254,8 +432,8 @@ def test_listing_lifecycle_visibility_and_risk_review(
     )
     held = client.post(f"/api/v1/listings/{controlled.json()['id']}/publish", headers=headers)
     assert held.status_code == 200
-    assert held.json()["status"] == "under_review"
-    assert client.get(f"/api/v1/listings/{controlled.json()['id']}").status_code == 404
+    assert held.json()["status"] == "active"
+    assert client.get(f"/api/v1/listings/{controlled.json()['id']}").status_code == 200
 
 
 def test_owner_approval_allocation_and_private_messages(
@@ -302,6 +480,16 @@ def test_owner_approval_allocation_and_private_messages(
     )
     assert published.status_code == 200
 
+    inquiry = client.post(
+        f"/api/v1/listings/{listing_id}/messages",
+        headers=renter_headers,
+        json={
+            "client_message_id": "20000000-0000-0000-0000-000000000000",
+            "body": "Is this available after 10 AM?",
+        },
+    )
+    assert inquiry.status_code == 201
+
     quote_payload = {
         "starts_at": "2026-10-10T04:30:00Z",
         "ends_at": "2026-10-12T04:30:00Z",
@@ -320,6 +508,13 @@ def test_owner_approval_allocation_and_private_messages(
     )
     booking_id = booking.json()["id"]
     assert booking.json()["status"] == "requested"
+    booking_messages = client.get(
+        f"/api/v1/bookings/{booking_id}/messages", headers=renter_headers
+    )
+    assert booking_messages.status_code == 200
+    assert [item["body"] for item in booking_messages.json()] == [
+        "Is this available after 10 AM?"
+    ]
 
     blocked = client.post(
         f"/api/v1/bookings/{booking_id}/messages",

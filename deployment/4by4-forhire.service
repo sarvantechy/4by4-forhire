@@ -1,0 +1,24 @@
+[Unit]
+Description=4by4 For Hire FastAPI Service
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=forhire
+Group=forhire
+WorkingDirectory=/opt/4by4-forhire
+EnvironmentFile=/etc/4by4-forhire.env
+ExecStart=/opt/4by4-forhire/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8006 --workers 2
+Restart=on-failure
+RestartSec=5
+MemoryMax=400M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/4by4-forhire
+
+[Install]
+WantedBy=multi-user.target

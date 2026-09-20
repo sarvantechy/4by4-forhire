@@ -57,7 +57,7 @@ export default function Home() {
       <main id="main-content">
         <section className="search-band" aria-labelledby="find-heading">
           <div className="search-copy">
-            <p className="location-label">Kanyakumari pilot</p>
+            <p className="location-label">Tamil Nadu pilot</p>
             <h1 id="find-heading">{translate("en", "home.heroTitle")}</h1>
             <p>Borrow useful equipment nearby. Pay at handover.</p>
           </div>
@@ -115,7 +115,7 @@ export default function Home() {
             </span>
             <div>
               <h3>{translate("en", "home.nearbyEmpty")}</h3>
-              <p>The Kanyakumari inventory will appear here as owners publish items.</p>
+              <p>The Tamil Nadu inventory will appear here as owners publish items.</p>
             </div>
             <Link className="secondary-action" href="/list-item">
               List the first item

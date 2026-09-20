@@ -7,7 +7,11 @@
 - Verified controls: Cookie CSRF denial, refresh replay denial, participant-scoped booking/message access, direct phone-sharing rejection, dual handover/return confirmation, review eligibility, staff denial, and moderation mutation audit
 - Status source: [Implementation Plan](IMPLEMENTATION_PLAN.md)
 
-Not yet implemented: private listing/evidence media storage and scanning, signed media delivery, production OTP/email providers, identity verification, user blocking, generic idempotency storage, legal/dispute holds, sensitive-read audit, staff case assignment, sanctions/appeals, notification workers, and retention jobs.
+Not yet implemented: private listing/evidence media scanning, production OTP/email providers,
+identity verification, generic idempotency storage, legal/dispute holds, sensitive-read audit,
+sanctions/appeals, notification workers, and retention jobs. Account deactivation is implemented:
+it revokes sessions, removes login identifiers/addresses/media, anonymizes the profile, hides
+inventory, and retains required transaction and safety records.
 
 ## Purpose
 

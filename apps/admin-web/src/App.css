@@ -437,6 +437,30 @@ button:disabled {
   background: white;
 }
 
+.case-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.case-controls select {
+  min-height: 40px;
+  padding: 0 10px;
+  color: #171a1f;
+  border: 1px solid #d7dce0;
+  background: white;
+  font-weight: 700;
+}
+
+.case-controls button {
+  min-height: 40px;
+  padding: 0 12px;
+  color: #171a1f;
+  border: 1px solid #171a1f;
+  background: #eef7f4;
+  font-weight: 900;
+}
+
 @media (max-width: 1000px) {
   .queue-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

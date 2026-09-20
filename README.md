@@ -11,7 +11,8 @@ Phase 0 policy and provider decisions remain in progress while the core C2C work
 - Categories, listing creation and lifecycle, pricing, availability blocks, seller headers, PostGIS-backed discovery, and risk-review holds
 - Quote snapshots, owner-approved booking transitions, quantity allocation, booking-scoped messages, and direct-contact blocking
 - Fulfillment scheduling, dual handover/return challenges, structured condition reports, offline-payment acknowledgements, return/inspection completion, reviews, reports, and disputes
-- Staff authentication, report listing, listing approve/remove actions, and append-only moderation audit records
+- Staff authentication, live report and dispute queues with priority/status/assign-to-me case controls, listing approve/remove actions, and append-only moderation audit records
+- Mobile-only bargain/offer negotiation on listings, block-user protection (chat and bookings) with a blocked-users screen, in-app dispute filing, reusable skeleton loading states, and a light-hearted outage screen with an offline mini-game shown when the app cannot reach the API
 
 Local infrastructure and migrations through `20260916_0005` are verified. Backend checks, five PostgreSQL integration tests, generated-contract drift checks, workspace lint/typechecks/builds, Expo Doctor, customer Playwright smoke tests, and responsive browser inspections passed locally during the 2026-09-16 implementation session.
 
@@ -23,7 +24,7 @@ Implementation status is tracked in [Implementation Plan](docs/IMPLEMENTATION_PL
 
 - Ship customer experiences on Android, iOS, and a responsive web application.
 - Keep core marketplace capabilities consistent across mobile and web while using platform-appropriate navigation, authentication storage, uploads, location, and notifications.
-- Serve users across India and pilot operations in Kanyakumari district, Tamil Nadu.
+- Serve users across India and pilot operations across Tamil Nadu.
 - Support mobile OTP and email/password authentication.
 - Allow users to publish listings immediately, subject to automated checks and post-publication moderation.
 - Require owner approval for every booking.
@@ -47,6 +48,7 @@ Implementation status is tracked in [Implementation Plan](docs/IMPLEMENTATION_PL
 - [API Design](docs/API_DESIGN.md)
 - [Security, Payments, and Trust](docs/SECURITY_PAYMENTS_AND_TRUST.md)
 - [UI and UX Plan](docs/UI_UX_PLAN.md)
+- [Store Listing Readiness](docs/STORE_LISTING.md)
 
 ## Development
 
@@ -64,6 +66,28 @@ Default local endpoints after following the contributing guide:
 | MinIO console | `http://127.0.0.1:19001` |
 | PostgreSQL/PostGIS | `127.0.0.1:15432` |
 | Redis | `127.0.0.1:16379` |
+
+### Mobile maps
+
+The native mobile app uses MapLibre React Native with MapTiler Streets tiles. Add a public,
+application-restricted MapTiler key to the mobile environment before building:
+
+```bash
+EXPO_PUBLIC_MAPTILER_KEY=your_public_maptiler_key
+```
+
+MapLibre is a native module and is not available in Expo Go. After dependency or plugin changes,
+regenerate and run the native project:
+
+```bash
+cd apps/mobile
+npx expo prebuild --platform android --no-install
+npx expo run:android
+```
+
+Production keys must be restricted and monitored in the MapTiler dashboard. Keep the visible
+`© MapTiler © OpenStreetMap contributors` attribution on every map. MapTiler's free tier is
+quota-limited; review its current plan before Play Store release.
 
 ## Reference Application
 

@@ -17,7 +17,7 @@ This roadmap describes phase outcomes. A phase is not complete merely because pa
 
 ## Planning Basis
 
-This roadmap assumes a small focused team, a new codebase, and a controlled Kanyakumari pilot. The sequence is dependency-based. Calendar estimates should be finalized after team size, provider choices, and operational policies are confirmed.
+This roadmap assumes a small focused team, a new codebase, and a controlled Tamil-Nadu-wide pilot (superseding the earlier Kanyakumari-only pilot framing). The sequence is dependency-based. Calendar estimates should be finalized after team size, provider choices, and operational policies are confirmed.
 
 Indicative duration: 25 to 32 weeks for a three-to-four-person team delivering the complete pilot-ready mobile, customer web, admin, backend, and operational MVP. This excludes external legal, provider, app-store, and identity-verification approval delays. Parallel frontend capacity and design readiness can materially change the range.
 
@@ -193,7 +193,7 @@ Deliverables:
 - Initial seller onboarding and support training
 - Play Store and App Store release preparation
 - Customer web deployment, domain, robots, sitemap, and monitoring preparation
-- Controlled Kanyakumari launch and monitoring plan
+- Controlled Tamil-Nadu-wide launch and monitoring plan
 
 Exit criteria:
 
@@ -212,7 +212,7 @@ Exit criteria:
 - Validate listing quality, inventory accuracy, response times, and handover evidence.
 - Keep customer access invite-only.
 
-### Cohort 2: Limited Kanyakumari Public Access
+### Cohort 2: Limited Tamil-Nadu-Wide Public Access
 
 - Open discovery and booking within selected service areas.
 - Monitor disputes, cancellations, payment failures, and support load daily.

@@ -9,7 +9,7 @@
 
 Screen names and journeys describe the target behavior. Use the implementation plan to distinguish connected controls from remaining media, evidence, verification, notification, and release work.
 
-Current UI gaps include listing and condition photos, private upload progress/retry, category-specific forms, advanced discovery filters/maps, full profile/address/session editing on mobile, password recovery, notification inbox/preferences, verification, complete dispute timelines/evidence, staff case assignment, rich evidence review, sanctions/appeals, and English/Tamil acceptance evidence.
+Current UI gaps include listing and condition photos, private upload progress/retry, category-specific forms, advanced discovery maps, full profile/address/session editing on mobile, password recovery, push notifications/preferences, verification, complete dispute timelines/evidence, staff case assignment, rich evidence review, sanctions/appeals, and English/Tamil acceptance evidence. A basic in-app conversations inbox (mobile) and Explore mode/budget/date filters are implemented but not yet device-verified.
 
 ## Experience Goal
 

@@ -5,6 +5,20 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 
 
+def test_public_legal_pages() -> None:
+    client = TestClient(create_app())
+
+    privacy = client.get("/privacy")
+    deletion = client.get("/account-deletion")
+
+    assert privacy.status_code == 200
+    assert "Privacy Policy" in privacy.text
+    assert "Account deletion instructions" in privacy.text
+    assert deletion.status_code == 200
+    assert "Delete in the app" in deletion.text
+    assert "What may be retained" in deletion.text
+
+
 def test_liveness_returns_service_version_and_request_id() -> None:
     client = TestClient(create_app())
 

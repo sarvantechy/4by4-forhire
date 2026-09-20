@@ -11,7 +11,7 @@ This document contains both current and target architecture. The current-state n
 
 ## Architecture Goals
 
-The architecture must support a fast Kanyakumari pilot without coupling the product to one city, one payment provider, or one server. The initial implementation should be a modular monolith with explicit domain boundaries and asynchronous workers.
+The architecture must support a fast Tamil-Nadu-wide pilot without coupling the product to one city, one payment provider, or one server. The initial implementation should be a modular monolith with explicit domain boundaries and asynchronous workers.
 
 ## Current Local System Context
 
@@ -42,7 +42,8 @@ flowchart LR
     Worker[Background workers] --> Outbox
     Worker --> Notify[Push, SMS, and email providers]
     Worker --> Media[Image scanning and processing]
-    API --> Maps[Maps and geocoding provider]
+    Mobile --> Maps[MapLibre renderer + MapTiler tiles]
+    API --> Geocoding[Geocoding provider]
 ```
 
 ## Recommended Stack

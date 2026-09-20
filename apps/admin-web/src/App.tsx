@@ -1,4 +1,4 @@
-import { APIClient, type ReportSummary, type UserResponse } from '@4by4/api-client'
+import { APIClient, type AdminCaseUpdateRequest, type AdminDisputeResponse, type ReportSummary, type UserResponse } from '@4by4/api-client'
 import {
   AlertTriangle,
   BadgeCheck,
@@ -31,6 +31,7 @@ const navigation = [
 function App() {
   const [operator, setOperator] = useState<UserResponse | null>(null)
   const [reports, setReports] = useState<ReportSummary[]>([])
+  const [disputes, setDisputes] = useState<AdminDisputeResponse[]>([])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [csrfToken, setCsrfToken] = useState('')
@@ -39,10 +40,11 @@ function App() {
   const [notice, setNotice] = useState('')
 
   useEffect(() => {
-    Promise.all([apiClient.getCurrentUser(), apiClient.listAdminReports()])
-      .then(([profile, items]) => {
+    Promise.all([apiClient.getCurrentUser(), apiClient.listAdminReports(), apiClient.listAdminDisputes()])
+      .then(([profile, items, disputeItems]) => {
         setOperator(profile)
         setReports(items)
+        setDisputes(disputeItems)
       })
       .catch(() => undefined)
       .finally(() => setBusy(false))
@@ -63,9 +65,11 @@ function App() {
         apiClient.getCurrentUser(),
         apiClient.listAdminReports(),
       ])
+      const disputeItems = await apiClient.listAdminDisputes()
       setCsrfToken(session.csrf_token ?? '')
       setOperator(profile)
       setReports(items)
+      setDisputes(disputeItems)
       setPassword('')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to start a staff session.')
@@ -81,6 +85,7 @@ function App() {
     } finally {
       setOperator(null)
       setReports([])
+      setDisputes([])
       setCsrfToken('')
       setBusy(false)
     }
@@ -100,6 +105,44 @@ function App() {
       setNotice(`Listing ${action === 'approve' ? 'approved' : 'removed'}; audit event recorded.`)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Moderation action failed.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function updateReport(report: ReportSummary, payload: Partial<AdminCaseUpdateRequest>) {
+    setBusy(true)
+    setError('')
+    setNotice('')
+    try {
+      const updated = await apiClient.updateReportCase(
+        report.id,
+        { assign_to_self: false, ...payload },
+        csrfToken || undefined,
+      )
+      setReports((current) => current.map((item) => (item.id === updated.id ? updated : item)))
+      setNotice('Report case updated.')
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Unable to update this report.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function updateDispute(dispute: AdminDisputeResponse, payload: Partial<AdminCaseUpdateRequest>) {
+    setBusy(true)
+    setError('')
+    setNotice('')
+    try {
+      const updated = await apiClient.updateDisputeCase(
+        dispute.id,
+        { assign_to_self: false, ...payload },
+        csrfToken || undefined,
+      )
+      setDisputes((current) => current.map((item) => (item.id === updated.id ? updated : item)))
+      setNotice('Dispute case updated.')
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Unable to update this dispute.')
     } finally {
       setBusy(false)
     }
@@ -127,10 +170,11 @@ function App() {
   }
 
   const openReports = reports.filter((report) => report.status === 'open')
+  const openDisputes = disputes.filter((dispute) => dispute.status === 'open' || dispute.status === 'in_review')
   const queues = [
     { label: 'Reported listings', value: openReports.filter((report) => report.target_type === 'listing').length, tone: 'yellow' },
     { label: 'Open safety reports', value: openReports.length, tone: 'red' },
-    { label: 'Active disputes', value: 0, tone: 'teal' },
+    { label: 'Active disputes', value: openDisputes.length, tone: 'teal' },
     { label: 'Verification reviews', value: 0, tone: 'ink' },
   ]
 
@@ -161,7 +205,7 @@ function App() {
       <main className="workspace">
         <header className="workspace-header">
           <div>
-            <p className="eyebrow">Kanyakumari pilot</p>
+            <p className="eyebrow">Tamil Nadu pilot</p>
             <h1>Operations overview</h1>
           </div>
           <div className="operator">
@@ -210,10 +254,81 @@ function App() {
                 <article className="case-row" key={report.id}>
                   <AlertTriangle aria-hidden="true" size={20} />
                   <div className="case-copy"><strong>{report.reason}</strong><p>{report.description || 'No additional description.'}</p><small>{report.target_type} · {new Date(report.created_at).toLocaleString('en-IN')}</small></div>
+                  <div className="case-controls">
+                    <select
+                      disabled={busy}
+                      onChange={(event) => updateReport(report, { priority: event.target.value as AdminCaseUpdateRequest['priority'] })}
+                      value={report.priority ?? 'normal'}
+                    >
+                      <option value="low">Low</option>
+                      <option value="normal">Normal</option>
+                      <option value="high">High</option>
+                      <option value="urgent">Urgent</option>
+                    </select>
+                    <select
+                      disabled={busy}
+                      onChange={(event) => updateReport(report, { status: event.target.value as AdminCaseUpdateRequest['status'] })}
+                      value={report.status}
+                    >
+                      <option value="open">Open</option>
+                      <option value="in_review">In review</option>
+                      <option value="resolved">Resolved</option>
+                      <option value="dismissed">Dismissed</option>
+                    </select>
+                    <button disabled={busy} onClick={() => updateReport(report, { assign_to_self: true })} type="button">
+                      {report.assigned_staff_user_id === operator.id ? 'Assigned to me' : 'Assign to me'}
+                    </button>
+                  </div>
                   {report.target_type === 'listing' && <div className="case-actions">
                     <button disabled={busy} onClick={() => moderate(report, 'approve')} type="button">Approve</button>
                     <button className="remove" disabled={busy} onClick={() => moderate(report, 'remove')} type="button">Remove</button>
                   </div>}
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="work-queue" aria-labelledby="dispute-heading">
+          <div className="section-heading compact">
+            <div>
+              <p className="eyebrow">Booking disagreements</p>
+              <h2 id="dispute-heading">Disputes</h2>
+            </div>
+          </div>
+          {disputes.length === 0 ? (
+            <div className="empty-table"><ClipboardList aria-hidden="true" size={28} /><div><strong>No disputes filed</strong><p>Renter or owner disputes will appear here.</p></div></div>
+          ) : (
+            <div className="case-list">
+              {disputes.map((dispute) => (
+                <article className="case-row" key={dispute.id}>
+                  <AlertTriangle aria-hidden="true" size={20} />
+                  <div className="case-copy"><strong>{dispute.type}</strong><p>{dispute.description || 'No additional description.'}</p><small>booking {dispute.booking_id} · {new Date(dispute.created_at).toLocaleString('en-IN')}</small></div>
+                  <div className="case-controls">
+                    <select
+                      disabled={busy}
+                      onChange={(event) => updateDispute(dispute, { priority: event.target.value as AdminCaseUpdateRequest['priority'] })}
+                      value={dispute.priority ?? 'normal'}
+                    >
+                      <option value="low">Low</option>
+                      <option value="normal">Normal</option>
+                      <option value="high">High</option>
+                      <option value="urgent">Urgent</option>
+                    </select>
+                    <select
+                      disabled={busy}
+                      onChange={(event) => updateDispute(dispute, { status: event.target.value as AdminCaseUpdateRequest['status'] })}
+                      value={dispute.status}
+                    >
+                      <option value="open">Open</option>
+                      <option value="in_review">In review</option>
+                      <option value="resolved">Resolved</option>
+                      <option value="dismissed">Dismissed</option>
+                    </select>
+                    <button disabled={busy} onClick={() => updateDispute(dispute, { assign_to_self: true })} type="button">
+                      {dispute.assigned_staff_user_id === operator.id ? 'Assigned to me' : 'Assign to me'}
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
