@@ -1,5 +1,6 @@
 """Typed application configuration."""
 
+from datetime import UTC, datetime, timedelta
 from functools import lru_cache
 
 from pydantic import Field, model_validator
@@ -31,6 +32,7 @@ class Settings(BaseSettings):
     verification_from_email: str = "no-reply@forhire.local"
     privacy_contact_email: str = "support@4by4softwares.com"
     skip_identity_verification: bool = False
+    verification_bypass_expires_at: datetime | None = None
     s3_endpoint_url: str | None = None
     s3_region: str = "ap-south-2"
     s3_bucket: str = "forhire-local"
@@ -83,10 +85,33 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def reject_verification_bypass_outside_development(self) -> "Settings":
-        """Keep the no-OTP dev shortcut out of shared environments."""
-        if self.skip_identity_verification and self.app_env not in {"development", "test"}:
-            raise ValueError("Verification bypass is only allowed in development or test")
+        """Require an explicit, short-lived expiry for a shared-environment bypass."""
+        if not self.skip_identity_verification or self.app_env in {"development", "test"}:
+            return self
+        expiry = self.verification_bypass_expires_at
+        if expiry is None:
+            raise ValueError("Shared-environment verification bypass requires an expiry")
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=UTC)
+        now = datetime.now(UTC)
+        if expiry <= now:
+            raise ValueError("Verification bypass expiry must be in the future")
+        if expiry > now + timedelta(days=120):
+            raise ValueError("Verification bypass cannot be enabled for more than 120 days")
         return self
+
+    @property
+    def verification_bypass_active(self) -> bool:
+        if not self.skip_identity_verification:
+            return False
+        if self.app_env in {"development", "test"}:
+            return True
+        expiry = self.verification_bypass_expires_at
+        if expiry is None:
+            return False
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=UTC)
+        return expiry > datetime.now(UTC)
 
     @property
     def allowed_origins(self) -> list[str]:

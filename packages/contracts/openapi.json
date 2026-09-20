@@ -740,6 +740,33 @@
         "title": "ConversationSummaryResponse",
         "type": "object"
       },
+      "DemoSessionRequest": {
+        "properties": {
+          "client_type": {
+            "default": "mobile",
+            "enum": [
+              "mobile",
+              "customer_web"
+            ],
+            "title": "Client Type",
+            "type": "string"
+          },
+          "device_label": {
+            "anyOf": [
+              {
+                "maxLength": 160,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Label"
+          }
+        },
+        "title": "DemoSessionRequest",
+        "type": "object"
+      },
       "DisputeRequest": {
         "properties": {
           "description": {
@@ -3319,6 +3346,47 @@
         "tags": [
           "fulfillment",
           "trust"
+        ]
+      }
+    },
+    "/api/v1/auth/demo": {
+      "post": {
+        "operationId": "login_demo_api_v1_auth_demo_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemoSessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionTokensResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login Demo",
+        "tags": [
+          "identity"
         ]
       }
     },

@@ -149,8 +149,32 @@ class IdentityService:
         self.session.commit()
         return issued
 
+    def issue_demo_session(
+        self,
+        *,
+        client_type: str,
+        device_label: str | None,
+    ) -> IssuedSession:
+        demo_mobile_number = self.settings.demo_mobile_number
+        if not demo_mobile_number:
+            raise APIError(
+                status_code=404,
+                code="DEMO_LOGIN_UNAVAILABLE",
+                message="The demo account is unavailable.",
+            )
+        identity = self._identity("mobile", demo_mobile_number)
+        if identity is None or identity.user.status != "active":
+            raise APIError(
+                status_code=404,
+                code="DEMO_LOGIN_UNAVAILABLE",
+                message="The demo account is unavailable.",
+            )
+        issued = self._issue_session(identity.user, client_type, device_label)
+        self.session.commit()
+        return issued
+
     def _require_bypass_enabled(self) -> None:
-        if not self.settings.skip_identity_verification:
+        if not self.settings.verification_bypass_active:
             raise APIError(
                 status_code=403,
                 code="VERIFICATION_BYPASS_DISABLED",

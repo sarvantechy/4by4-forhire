@@ -77,6 +77,11 @@ class MobileDirectRegisterRequest(BaseModel):
         raise ValueError("Enter a valid Indian mobile number")
 
 
+class DemoSessionRequest(BaseModel):
+    client_type: Literal["mobile", "customer_web"] = "mobile"
+    device_label: str | None = Field(default=None, max_length=160)
+
+
 class RefreshRequest(BaseModel):
     refresh_token: str | None = None
 

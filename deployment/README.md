@@ -47,6 +47,15 @@ used by the other 4by4softwares apps, at `https://api.forhire.4by4softwares.com`
    (`/4by4-forhire/prod/database_password`, `/4by4-forhire/prod/session_secret`)
    so they never appeared in plaintext command output or history.
 
+## Temporary internal-testing authentication
+
+Production currently permits the no-OTP direct registration endpoints for internal testing only.
+`SKIP_IDENTITY_VERIFICATION=true` is paired with
+`VERIFICATION_BYPASS_EXPIRES_AT=2026-12-31T23:59:59Z`. The application validates that a shared-
+environment bypass has a future expiry no more than 120 days away and checks the expiry on every
+direct-registration request. Replace this temporary path with the approved OTP/email providers
+before the cutoff.
+
 ## Repeat deployments
 
 ```bash

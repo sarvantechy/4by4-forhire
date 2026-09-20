@@ -187,6 +187,42 @@ def test_mobile_otp_refresh_rotation_and_replay_denial(
     assert replay.json()["error"]["code"] == "SESSION_INVALID"
 
 
+def test_demo_session_uses_only_configured_existing_identity(
+    identity_client: tuple[TestClient, RecordingCodeSender],
+) -> None:
+    client, sender = identity_client
+    unavailable = client.post(
+        "/api/v1/auth/demo",
+        json={"client_type": "mobile", "device_label": "Internal test"},
+    )
+    assert unavailable.status_code == 404
+    assert unavailable.json()["error"]["code"] == "DEMO_LOGIN_UNAVAILABLE"
+
+    requested = client.post(
+        "/api/v1/auth/mobile/request-otp",
+        json={"mobile_number": "+919999999999"},
+    )
+    verified = client.post(
+        "/api/v1/auth/mobile/verify-otp",
+        json={
+            "challenge_id": requested.json()["challenge_id"],
+            "code": sender.sent[-1].code,
+            "display_name": "Demo Renter",
+            "client_type": "mobile",
+        },
+    )
+    demo_user_id = verified.json()["user"]["id"]
+
+    demo = client.post(
+        "/api/v1/auth/demo",
+        json={"client_type": "mobile", "device_label": "Internal test"},
+    )
+    assert demo.status_code == 200
+    assert demo.json()["user"]["id"] == demo_user_id
+    assert demo.json()["access_token"]
+    assert demo.json()["refresh_token"]
+
+
 def test_account_deactivation_removes_personal_data_and_public_inventory(
     identity_client: tuple[TestClient, RecordingCodeSender],
 ) -> None:

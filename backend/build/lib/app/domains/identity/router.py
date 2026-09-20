@@ -22,6 +22,7 @@ from app.domains.identity.schemas import (
     AddressRequest,
     AddressResponse,
     ChallengeResponse,
+    DemoSessionRequest,
     EmailDirectRegisterRequest,
     EmailLoginRequest,
     EmailRegistrationRequest,
@@ -227,6 +228,15 @@ def register_mobile_direct(
     """Dev-only shortcut: create or sign in to an account with no OTP step."""
     issued = service.register_or_login_mobile_direct(**payload.model_dump())
     return _session_response(issued, response, service)
+
+
+@router.post("/demo")
+def login_demo(
+    payload: DemoSessionRequest,
+    response: Response,
+    service: IdentityService = Depends(get_identity_service),
+) -> SessionTokensResponse:
+    return _session_response(service.issue_demo_session(**payload.model_dump()), response, service)
 
 
 @router.post("/token/refresh")

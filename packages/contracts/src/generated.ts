@@ -89,6 +89,23 @@ export interface paths {
         patch: operations["update_report_case_api_v1_admin_reports__report_id__patch"];
         trace?: never;
     };
+    "/api/v1/auth/demo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login Demo */
+        post: operations["login_demo_api_v1_auth_demo_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/email/register": {
         parameters: {
             query?: never;
@@ -1649,6 +1666,17 @@ export interface components {
              */
             other_user_id: string;
         };
+        /** DemoSessionRequest */
+        DemoSessionRequest: {
+            /**
+             * Client Type
+             * @default mobile
+             * @enum {string}
+             */
+            client_type: "mobile" | "customer_web";
+            /** Device Label */
+            device_label?: string | null;
+        };
         /** DisputeRequest */
         DisputeRequest: {
             /** Description */
@@ -2734,6 +2762,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_demo_api_v1_auth_demo_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DemoSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionTokensResponse"];
                 };
             };
             /** @description Validation Error */
